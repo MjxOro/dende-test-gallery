@@ -223,7 +223,7 @@ const App: React.FC = () => {
       dpr={[1, 1.5]}
     >
       <color attach="background" args={["#ffffff"]} />
-      <ScrollControls pages={4}>
+      <ScrollControls pages={4} damping={8}>
         <Item />
       </ScrollControls>
     </Canvas>
