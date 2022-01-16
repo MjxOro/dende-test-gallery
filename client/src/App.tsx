@@ -1,8 +1,15 @@
 import React, { useRef, useState } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Scroll, ScrollControls, useIntersect, Image } from "@react-three/drei";
+import {
+  Scroll,
+  ScrollControls,
+  useIntersect,
+  Image,
+  useScroll,
+} from "@react-three/drei";
 import "./App.scss";
+import FadeImage from "./components/FadeImage";
 import Img1 from "./assets/1.jpeg";
 import Img2 from "./assets/2.jpeg";
 import Img3 from "./assets/3.jpeg";
@@ -14,7 +21,9 @@ const Foto: React.FC<any> = ({ scale, url, ...props }) => {
   const { width, height } = useThree((state) => state.viewport);
   const visible = useRef(false);
   const ref = useIntersect<any>((isVisible) => (visible.current = isVisible));
+  const scrollHook = useScroll();
   useFrame((state, delta) => {
+    const offset = scrollHook.offset;
     ref.current.position.y = THREE.MathUtils.damp(
       ref.current.position.y,
       visible.current ? 0 : -height / 2 + 1,
@@ -154,6 +163,10 @@ const Item: React.FC = () => {
           }
         />
       </Scroll>
+      <FadeImage
+        position={viewportW < 768 ? [0, 0, -1] : [0, 0, -1]}
+        args={[1000, 1000]}
+      />
       <Scroll html>
         <h1
           style={{
@@ -216,11 +229,7 @@ const Item: React.FC = () => {
 const App: React.FC = () => {
   return (
     <Canvas
-      orthographic
-      camera={{ zoom: 80 }}
-      //Settings below, improve performance. Mostly for html images with some 3d spice!
-      gl={{ alpha: false, antialias: false, stencil: false, depth: false }}
-      dpr={[1, 1.5]}
+    //Settings below, improve performance. Mostly for html images with some 3d spice!
     >
       <color attach="background" args={["#ffffff"]} />
       <ScrollControls pages={4} damping={8}>
